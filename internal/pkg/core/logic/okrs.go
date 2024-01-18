@@ -7,12 +7,14 @@ import (
 )
 
 type OkrLogic struct {
-	Repository repositories.OkrRepository
+	OrgRepository repositories.OrganizationRepository
+	OkrRepository repositories.OkrRepository
 }
 
-func NewOkrLogic(repository repositories.OkrRepository) OkrLogic {
+func NewOkrLogic(orgRepository repositories.OrganizationRepository, okrRepository repositories.OkrRepository) OkrLogic {
 	return OkrLogic{
-		Repository: repository,
+		OrgRepository: orgRepository,
+		OkrRepository: okrRepository,
 	}
 }
 
@@ -27,6 +29,10 @@ func (logic *OkrLogic) Validate(newOkr models.Okr) error {
 	}
 
 	if newOkr.OrgId == 0 {
+		return customerrors.NewArgumentError("organization")
+	}
+
+	if _, err := logic.OrgRepository.Get(newOkr.OrgId); err != nil {
 		return customerrors.NewArgumentError("organization")
 	}
 

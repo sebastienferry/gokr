@@ -10,12 +10,11 @@ import (
 )
 
 var (
-	orgRepo  = repositories.NewOrganizationRepositoryInMemory()
-	okrRepo  = repositories.NewOkrRepositoryInMemory()
-	okrLogic = NewOkrLogic(orgRepo, okrRepo)
+	orgaRepo  = repositories.NewOrganizationRepositoryInMemory()
+	orgaLogic = NewOrganizationLogic(orgaRepo)
 )
 
-func TestOkrLogic_ValidateTitle(t *testing.T) {
+func TestOrganizationLogic_ValidateTitle(t *testing.T) {
 	// Arrange & Act
 	okr := models.Okr{}
 	err := okrLogic.Validate(okr)
@@ -26,7 +25,7 @@ func TestOkrLogic_ValidateTitle(t *testing.T) {
 	}
 }
 
-func TestOkrLogic_ValidateDescription(t *testing.T) {
+func TestOrganizationLogic_ValidateDescription(t *testing.T) {
 	// Arrange & Act
 	okr := models.Okr{Title: "title"}
 	err := okrLogic.Validate(okr)
@@ -37,18 +36,7 @@ func TestOkrLogic_ValidateDescription(t *testing.T) {
 	}
 }
 
-func TestOkrLogic_ValidateOrganization(t *testing.T) {
-	// Arrange & Act
-	okr := models.Okr{Title: "title", Description: "description"}
-	err := okrLogic.Validate(okr)
-
-	// Assert
-	if assert.Error(t, err) {
-		assert.Equal(t, customerrors.NewArgumentError("organization"), err)
-	}
-}
-
-func TestOkrLogic_ValidateOkr(t *testing.T) {
+func TestOrganizationLogic_ValidateOkr(t *testing.T) {
 	// Arrange & Act
 	okr := models.Okr{Title: "title", Description: "description", OrgId: 1}
 	err := okrLogic.Validate(okr)

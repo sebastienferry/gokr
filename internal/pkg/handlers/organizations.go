@@ -10,17 +10,17 @@ import (
 	"github.com/sebastienferry/gokr/core/repositories"
 )
 
-type OkrHandler struct {
-	Repository repositories.OkrRepository
-	Logic      logic.OkrLogic
+type OrganizationHandler struct {
+	Repository repositories.OrganizationRepository
+	Logic      logic.OrganizationLogic
 }
 
-func NewOkrHandler(orgRepository repositories.OrganizationRepository, okrRepository repositories.OkrRepository) *OkrHandler {
-	return &OkrHandler{Repository: okrRepository, Logic: logic.NewOkrLogic(orgRepository, okrRepository)}
+func NewOrganizationHandler(repository repositories.OrganizationRepository) *OrganizationHandler {
+	return &OrganizationHandler{Repository: repository, Logic: logic.NewOrganizationLogic(repository)}
 }
 
-// Get all OKRs.
-func (h *OkrHandler) GetOkrs(c *gin.Context) {
+// Get all organizations.
+func (h *OrganizationHandler) GetOrganizations(c *gin.Context) {
 	okrs, err := h.Repository.GetAll()
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "Internal server error"})
@@ -30,7 +30,7 @@ func (h *OkrHandler) GetOkrs(c *gin.Context) {
 }
 
 // Get one OKR by ID.
-func (h *OkrHandler) GetOkr(c *gin.Context) {
+func (h *OrganizationHandler) GetOrganization(c *gin.Context) {
 	sid := c.Param("id")
 
 	var id int64
@@ -40,62 +40,62 @@ func (h *OkrHandler) GetOkr(c *gin.Context) {
 		return
 	}
 
-	okr, err := h.Repository.Get(id)
+	org, err := h.Repository.Get(id)
 	if err != nil {
-		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "OKR not found"})
+		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "Organization not found"})
 		return
 	}
 
-	c.IndentedJSON(http.StatusOK, okr)
+	c.IndentedJSON(http.StatusOK, org)
 }
 
 // Creates a new OKR.
-func (h *OkrHandler) PutOkr(c *gin.Context) {
-	var newOkr models.Okr
+func (h *OrganizationHandler) PutOrganization(c *gin.Context) {
+	var newOrg models.Organization
 
-	if err := c.BindJSON(&newOkr); err != nil {
+	if err := c.BindJSON(&newOrg); err != nil {
 		return
 	}
 
-	if err := h.Logic.Validate(newOkr); err != nil {
+	if err := h.Logic.Validate(newOrg); err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 
-	newOkr, err := h.Repository.Create(newOkr)
+	newOrg, err := h.Repository.Create(newOrg)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "Internal server error"})
 		return
 	}
-	c.IndentedJSON(http.StatusCreated, newOkr)
+	c.IndentedJSON(http.StatusCreated, newOrg)
 }
 
 // Update an existing OKR.
-func (h *OkrHandler) PostOkr(c *gin.Context) {
-	var updatedOkr models.Okr
+func (h *OrganizationHandler) PostOrganization(c *gin.Context) {
+	var updatedOrg models.Organization
 
-	if err := c.BindJSON(&updatedOkr); err != nil {
+	if err := c.BindJSON(&updatedOrg); err != nil {
 		return
 	}
 
-	if err := h.Logic.Validate(updatedOkr); err != nil {
+	if err := h.Logic.Validate(updatedOrg); err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 
-	okr, err := h.Repository.Update(updatedOkr)
+	okr, err := h.Repository.Update(updatedOrg)
 
 	if err == nil {
 		c.IndentedJSON(http.StatusOK, okr)
 		return
 	}
 
-	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "OKR not found"})
+	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "Organization not found"})
 }
 
 // Delete an existing OKR.
 // TODO: Prevent deletion of OKRs that have children.
-func (h *OkrHandler) DeleteOkr(c *gin.Context) {
+func (h *OrganizationHandler) DeleteOrganization(c *gin.Context) {
 	sid := c.Param("id")
 
 	var id int64
@@ -107,7 +107,7 @@ func (h *OkrHandler) DeleteOkr(c *gin.Context) {
 
 	err = h.Repository.Delete(id)
 	if err != nil {
-		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "OKR not found"})
+		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "Organization not found"})
 		return
 	}
 

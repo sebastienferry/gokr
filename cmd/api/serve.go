@@ -9,9 +9,20 @@ import (
 func main() {
 	router := gin.Default()
 
-	okrRepository := repositories.NewOkrRepositoryInMemory()
-	okrHandler := handlers.NewOkrHandler(okrRepository)
+	orgRepository := repositories.NewOrganizationRepositoryInMemory()
+	orgHandler := handlers.NewOrganizationHandler(orgRepository)
 
+	// Route organization requests
+	router.GET("/api/organizations", orgHandler.GetOrganizations)
+	router.GET("/api/organizations/:id", orgHandler.GetOrganization)
+	router.PUT("/api/organizations", orgHandler.PutOrganization)
+	router.POST("/api/organizations:id", orgHandler.PostOrganization)
+	router.DELETE("/api/organizations:id", orgHandler.DeleteOrganization)
+
+	okrRepository := repositories.NewOkrRepositoryInMemory()
+	okrHandler := handlers.NewOkrHandler(orgRepository, okrRepository)
+
+	// Route okr requests
 	router.GET("/api/okrs", okrHandler.GetOkrs)
 	router.GET("/api/okrs/:id", okrHandler.GetOkr)
 	router.PUT("/api/okrs", okrHandler.PutOkr)
