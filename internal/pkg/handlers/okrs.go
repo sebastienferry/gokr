@@ -5,16 +5,18 @@ import (
 	"net/http"
 
 	gin "github.com/gin-gonic/gin"
+	"github.com/sebastienferry/gokr/core/logic"
 	models "github.com/sebastienferry/gokr/core/models"
 	"github.com/sebastienferry/gokr/core/repositories"
 )
 
 type OkrHandler struct {
 	Repository repositories.OkrRepository
+	Logic      logic.OkrLogic
 }
 
 func NewOkrHandler(repository repositories.OkrRepository) *OkrHandler {
-	return &OkrHandler{Repository: repository}
+	return &OkrHandler{Repository: repository, Logic: logic.NewOkrLogic(repository)}
 }
 
 // Get all OKRs.
@@ -55,6 +57,11 @@ func (h *OkrHandler) PutOkr(c *gin.Context) {
 		return
 	}
 
+	if err := h.Logic.Validate(newOkr); err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+
 	newOkr, err := h.Repository.Create(newOkr)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "Internal server error"})
@@ -71,6 +78,11 @@ func (h *OkrHandler) PostOkr(c *gin.Context) {
 		return
 	}
 
+	if err := h.Logic.Validate(updatedOkr); err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+
 	okr, err := h.Repository.Update(updatedOkr)
 
 	if err == nil {
@@ -82,6 +94,7 @@ func (h *OkrHandler) PostOkr(c *gin.Context) {
 }
 
 // Delete an existing OKR.
+// TODO: Prevent deletion of OKRs that have children.
 func (h *OkrHandler) DeleteOkr(c *gin.Context) {
 	sid := c.Param("id")
 
