@@ -1,13 +1,16 @@
 <template>
-    <div>{{name}}</div>
+    <div>{{name}}</div>    
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, computed } from 'vue';
+import { useStore } from 'vuex'
 export default defineComponent({
     data() {
+        const store = useStore()
         return {
-            name: 'Home'
+            name: 'Home',
+            isAuthenticated: computed(() => store.state.isAuthenticated)
         };
     },
 })
