@@ -1,14 +1,3 @@
-<script lang="ts">
-import { defineComponent } from 'vue';
-import OrganizationSelector from './components/OrganizationSelector.vue';
-export default defineComponent({
-  name: 'App',
-  components: {
-    OrganizationSelector,
-  },
-})
-</script>
-
 <template>
   <nav class="level">
     <!-- Left side -->
@@ -31,11 +20,8 @@ export default defineComponent({
 
             <div id="navbar" class="navbar-menu">
               <div class="navbar-start">
-                <a class="navbar-item">
-                  Home
-                </a>
-
-                <div class="navbar-item has-dropdown is-hoverable">
+                <router-link class="navbar-item" to="/ui">Home</router-link>                
+                <div class="navbar-item has-dropdown is-hoverable">                  
                   <a class="navbar-link">
                     Configuration
                   </a>
@@ -46,6 +32,7 @@ export default defineComponent({
                     </a>
                   </div>
                 </div>
+                <router-link class="navbar-item" to="/ui/about">About</router-link>
               </div>
             </div>
           </nav>
@@ -64,19 +51,18 @@ export default defineComponent({
       </div>
     </div>
   </nav>
+  <div class="container">
+    <router-view />
+  </div>  
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  name: 'App',
+  data: () => ({
+    isAuthenticated: false,
+  }),
+});
+</script>
