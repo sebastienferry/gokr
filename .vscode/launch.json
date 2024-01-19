@@ -7,9 +7,10 @@
         {
             "name": "Server",
             "type": "go",
-            "request": "launch",
+            "request": "launch",            
             "mode": "auto",
-            "program": "${workspaceFolder}/cmd/api/serve.go"
+            "program": "${workspaceFolder}/cmd/api/serve.go",            
+            "cwd": "${workspaceFolder}",            
         }
     ]
 }

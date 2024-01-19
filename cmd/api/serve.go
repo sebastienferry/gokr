@@ -29,5 +29,8 @@ func main() {
 	router.POST("/api/okrs:id", okrHandler.PostOkr)
 	router.DELETE("/api/okrs:id", okrHandler.DeleteOkr)
 
+	// Serve frontend
+	router.Static("/ui", "web/frontend/dist")
+
 	router.Run("localhost:8080")
 }
