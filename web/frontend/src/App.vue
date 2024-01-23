@@ -32,14 +32,8 @@
       </div>
     </div>
 
-
+    
     <div class="navbar-end">      
-      <div class="navbar-item">
-        <div class="buttons" v-if="!isAuthenticated">
-          <OrganizationSelector />
-        </div>      
-      </div>
-      <div class="navbar-divider"></div>
       <div class="navbar-item">
         <div class="buttons" v-if="!isAuthenticated">
           <button class="button is-primary" @click="authenticate">
@@ -47,8 +41,12 @@
           </button>
         </div>
       </div>
+      
       <div class="navbar-item">
         <div class="buttons" v-if="isAuthenticated">
+          <div>
+            <OrganizationSelector />
+          </div>
           <button class="button is-light" @click="logout">
             Log Out
           </button>
@@ -65,10 +63,13 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue';
 import { useStore } from 'vuex'
-import OrganizationSelector from './components/OrganizationSelector.vue'
+import OrganizationSelector from './components/OrganizationSelector.vue';
 
 export default defineComponent({
   name: 'App',
+  components: {
+    OrganizationSelector
+},
   data() {
     const store = useStore()
     return {

@@ -19,7 +19,11 @@ type OrganizationRepositoryInMemory struct {
 
 func NewOrganizationRepositoryInMemory() OrganizationRepository {
 	return &OrganizationRepositoryInMemory{
-		Organizations: make(map[int64]models.Organization),
+		Organizations: map[int64]models.Organization{
+			1: {Id: 1, Name: "Organization 1"},
+			2: {Id: 2, Name: "Organization 2"},
+			3: {Id: 3, Name: "Organization 3"},
+		},
 	}
 }
 
