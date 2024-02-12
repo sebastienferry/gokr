@@ -1,6 +1,6 @@
 <template>
     <div>
-        <select class="select">
+        <select class="select" onchange="">
             <option v-for="organization in organizations" :key="organization.id" :value="organization.id">{{ organization.name }}</option>
         </select>
     </div>
@@ -13,15 +13,15 @@ export default defineComponent({
     setup() {
         return {
             organizations: [
-            {
-                id: 1,
-                name: 'Organization 1'
-            },
-            {
-                id: 2,
-                name: 'Organization 2'
-            },
-        ]    
+                {
+                    id: 1,
+                    name: 'Organization 1'
+                },
+                {
+                    id: 2,
+                    name: 'Organization 2'
+                },
+            ]    
         }
     },
     mounted() {
