@@ -3,3 +3,4 @@ serve.exe
 *.exe
 web/frontend/package-lock.json
 web/frontend/yarn.lock
+*.todo
